@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SearchCommandLineApp.Services
 {
-    class JsonToModelConverterService
+    class JsonToModelConverterService : IJsonToModelConverterService
     {
         public IEnumerable<T> GetModelsFromFile<T>(string fileName)
         {
