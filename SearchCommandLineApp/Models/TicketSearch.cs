@@ -13,11 +13,9 @@ namespace SearchCommandLineApp.Models
     {
         private List<Ticket> _tickets;
 
-        public TicketSearch(JsonToModelConverterService dataService)
+        public TicketSearch(IEnumerable<Ticket> tickets)
         {
-            string ticketsFileName = "tickets.json";
-
-            _tickets = dataService.GetModelsFromFile<Ticket>(ticketsFileName).ToList();
+            _tickets = tickets.ToList();
         }
 
         public IEnumerable<string> Search(string searchTerm)

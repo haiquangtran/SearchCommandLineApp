@@ -15,11 +15,14 @@ namespace SearchCommandLineApp
             if (args.Count() == 2)
             {                
                 JsonToModelConverterService dataService = new JsonToModelConverterService();
+                var organisations = dataService.GetModelsFromFile<Organisation>("organizations.json");
+                var users = dataService.GetModelsFromFile<User>("users.json");
+                var tickets = dataService.GetModelsFromFile<Ticket>("tickets.json");
 
                 // Strategies
-                var ticketSearch = new TicketSearch(dataService);
-                var userSearch = new UserSearch(dataService);
-                var organisationSearch = new OrganisationSearch(dataService);
+                var ticketSearch = new TicketSearch(tickets);
+                var userSearch = new UserSearch(users);
+                var organisationSearch = new OrganisationSearch(organisations);
 
                 SearchApp app = new SearchApp(dataService, userSearch);
                 

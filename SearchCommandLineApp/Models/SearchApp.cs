@@ -21,6 +21,11 @@ namespace SearchCommandLineApp.Models
             _searchMethod = searchMethod;
         }
 
+        public void SetSearchMethod(ISearchable searchMethod)
+        {
+            _searchMethod = searchMethod;
+        }
+
         public void Search(string searchTerm)
         {
             _searchResults = _searchMethod.Search(searchTerm).ToList();

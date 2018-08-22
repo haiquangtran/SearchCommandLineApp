@@ -13,11 +13,9 @@ namespace SearchCommandLineApp.Models
     {
         private List<Organisation> _organisations;
 
-        public OrganisationSearch(JsonToModelConverterService dataService)
+        public OrganisationSearch(IEnumerable<Organisation> organisations)
         {
-            string organisationFileName = "organizations.json";
-
-            _organisations = dataService.GetModelsFromFile<Organisation>(organisationFileName).ToList();
+            _organisations = organisations.ToList();
         }
 
         public IEnumerable<string> Search(string searchTerm)

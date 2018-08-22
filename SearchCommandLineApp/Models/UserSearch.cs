@@ -13,11 +13,9 @@ namespace SearchCommandLineApp.Models
     {
         private List<User> _users;
 
-        public UserSearch(JsonToModelConverterService dataService)
+        public UserSearch(IEnumerable<User> users)
         {
-            string usersFileName = "users.json";
-
-            _users = dataService.GetModelsFromFile<User>(usersFileName).ToList();
+            _users = users.ToList();
         }
 
         public IEnumerable<string> Search(string searchTerm)
