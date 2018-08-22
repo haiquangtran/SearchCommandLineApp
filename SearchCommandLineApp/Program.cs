@@ -13,15 +13,23 @@ namespace SearchCommandLineApp
         static void Main(string[] args)
         {            
             if (args.Count() == 2)
-            {
+            {                
                 JsonToModelConverterService dataService = new JsonToModelConverterService();
-                SearchApp app = new SearchApp(dataService);
 
+                // Strategies
+                var ticketSearch = new TicketSearch(dataService);
+                var userSearch = new UserSearch(dataService);
+                var organisationSearch = new OrganisationSearch(dataService);
+
+                SearchApp app = new SearchApp(dataService, userSearch);
+                
                 var command = args[0];
 
+                // TODO:
                 if (command == "search")
                 {
                     app.Search(args[1]);
+                    app.PrintSearchResults();
                 }
             }
 

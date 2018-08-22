@@ -13,46 +13,30 @@ namespace SearchCommandLineApp.Models
 {
     class SearchApp
     {
-        private List<Organisation> _organisations;
-        private List<Ticket> _tickets;
-        private List<User> _users;
+        private List<string> _searchResults;
+        private ISearchable _searchMethod;
 
-        public SearchApp(JsonToModelConverterService dataService)
+        public SearchApp(JsonToModelConverterService dataService, ISearchable searchMethod)
         {
-            // TODO:
-            string fileName = "organizations.json";
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\", fileName);
-
-            _organisations = dataService.GetModelsFromFile(filePath).ToList();
+            _searchMethod = searchMethod;
         }
 
         public void Search(string searchTerm)
         {
-            foreach (var organisation in _organisations)
+            _searchResults = _searchMethod.Search(searchTerm).ToList();
+        }
+
+        public void PrintSearchResults()
+        {
+            if (_searchResults.Count == 0)
             {
-                var organisationProperties = organisation.GetType().GetProperties().ToList();
-                var organisationHasSearchTerm = organisationProperties.Any(p =>
-                {
-                    var propertyValue = p.GetValue(organisation, null);
-                    if (propertyValue is string)
-                        return String.Equals(propertyValue.ToString(), searchTerm, StringComparison.OrdinalIgnoreCase);
-
-                    var propertyList = propertyValue as IEnumerable;
-                    if (propertyList != null)
-                    {
-                        foreach (var propertyListVal in propertyList)
-                        {
-                            if (String.Equals(propertyListVal.ToString(), searchTerm, StringComparison.OrdinalIgnoreCase))
-                                return true;
-                        }
-                    }
-
-                    return false;
-                });
-
-                if (organisationHasSearchTerm)
-                    Console.WriteLine(JsonConvert.SerializeObject(organisation));
+                Console.WriteLine("FOUND NO SEARCH RESULTS.");
+                return;
             }
+                
+            Console.WriteLine($"FOUND {_searchResults.Count} SEARCH RESULT(S): ");
+            var result = string.Join(",", _searchResults);
+            Console.WriteLine(result);
         }
     }
 }

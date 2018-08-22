@@ -46,6 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\ISearchable.cs" />
+    <Compile Include="Models\UserSearch.cs" />
+    <Compile Include="Models\TicketSearch.cs" />
+    <Compile Include="Models\OrganisationSearch.cs" />
     <Compile Include="Models\Organisation.cs" />
     <Compile Include="Models\SearchApp.cs" />
     <Compile Include="Models\Ticket.cs" />
@@ -59,8 +62,12 @@
     <None Include="Data\organizations.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\tickets.json" />
-    <None Include="Data\users.json" />
+    <None Include="Data\tickets.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\users.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
