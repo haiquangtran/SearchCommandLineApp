@@ -16,7 +16,11 @@ namespace SearchCommandLineApp.Models
         private List<string> _searchResults;
         private ISearchable _searchMethod;
 
-        public SearchApp(JsonToModelConverterService dataService, ISearchable searchMethod)
+        public SearchApp()
+        {
+        }
+
+        public SearchApp(ISearchable searchMethod)
         {
             _searchMethod = searchMethod;
         }

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Constants.cs" />
     <Compile Include="Models\ISearchable.cs" />
     <Compile Include="Models\UserSearch.cs" />
     <Compile Include="Models\TicketSearch.cs" />
