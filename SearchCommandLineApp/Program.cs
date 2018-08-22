@@ -32,7 +32,6 @@ namespace SearchCommandLineApp
                 {
                     JsonToModelConverterService dataService = new JsonToModelConverterService();
                     SearchApp app = new SearchApp();
-                    // Strategies
                     OrganisationSearch organisationSearch = null;
                     TicketSearch ticketSearch = null;
                     UserSearch userSearch = null;
@@ -58,7 +57,8 @@ namespace SearchCommandLineApp
                         }
                         else
                         {
-                            Console.WriteLine($"NO DATASET FOR {dataset} WAS FOUND");
+                            Console.WriteLine($"NO DATASET FOR {dataset} WAS FOUND.");
+                            Console.WriteLine("THE AVAILABLE DATASET OPTIONS ARE THE FOLLOWING:\nOrganisations\nTickets\nUsers");
                             continue;
                         }
                         
