@@ -6,7 +6,7 @@ A simple command line application that does an exact match on field values for .
 2. Use this tool by using the following syntax in the terminal: "./SearchCommandLineApp -search "search-term" -dataset <organisations | users | tickets> [organisations | users | tickets] [organisations | users | tickets]"
 
 # Syntax
-### ./SearchCommandLineApp -search "search-term" -dataset <organisations | users | tickets>
+### ./SearchCommandLineApp -search "search-term" -dataset <organisations | users | tickets> [organisations | users | tickets [organisations | users | tickets]
 - "Search-term": is the value you are looking for within the JSON object i.e. "John"
 - <organisations | users | tickets>: Represents that it is required to specify one of these datasets.
 - [organisations | users | tickets]: Represents that it is optional to specify one of these datasets.
