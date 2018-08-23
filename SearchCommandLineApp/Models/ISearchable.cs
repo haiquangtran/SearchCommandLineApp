@@ -8,6 +8,6 @@ namespace SearchCommandLineApp.Models
 {
     public interface ISearchable
     {
-        IEnumerable<string> Search(string searchTerm);
+        IEnumerable<string> Search(string searchTerm, IEnumerable<Object> propertyCollection);
     }
 }

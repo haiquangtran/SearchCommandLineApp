@@ -9,25 +9,18 @@ using System.Threading.Tasks;
 
 namespace SearchCommandLineApp.Models
 {
-    class TicketSearch : ISearchable
+    class PropertyValueSearch : ISearchable
     {
-        private List<Ticket> _tickets;
-
-        public TicketSearch(IEnumerable<Ticket> tickets)
-        {
-            _tickets = tickets.ToList();
-        }
-
-        public IEnumerable<string> Search(string searchTerm)
+        public IEnumerable<string> Search(string searchTerm, IEnumerable<Object> propertyCollection)
         {
             var objectsContainingSearchTerm = new List<string>();
 
-            foreach (var ticket in _tickets)
+            foreach (var property in propertyCollection)
             {
-                var ticketProperties = ticket.GetType().GetProperties().ToList();
-                var ticketHasSearchTerm = ticketProperties.Any(p =>
+                var properties = property.GetType().GetProperties().ToList();
+                var hasSearchTerm = properties.Any(p =>
                 {
-                    var propertyValue = p.GetValue(ticket, null);
+                    var propertyValue = p.GetValue(property, null);
                     var propertyList = propertyValue as IEnumerable;
                     if (propertyList != null && !(propertyList is string))
                     {
@@ -41,8 +34,8 @@ namespace SearchCommandLineApp.Models
                     return String.Equals(propertyValue?.ToString() ?? string.Empty, searchTerm, StringComparison.OrdinalIgnoreCase);
                 });
 
-                if (ticketHasSearchTerm)
-                    objectsContainingSearchTerm.Add(JsonConvert.SerializeObject(ticket, Formatting.Indented));
+                if (hasSearchTerm)
+                    objectsContainingSearchTerm.Add(JsonConvert.SerializeObject(property, Formatting.Indented));
             }
 
             return objectsContainingSearchTerm;

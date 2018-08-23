@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SearchCommandLineApp.Models
 {
-    class Organisation
+    public class Organisation
     {
         public int _id { get; set; }
         public string url { get; set; }

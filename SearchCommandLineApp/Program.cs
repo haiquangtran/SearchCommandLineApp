@@ -1,5 +1,6 @@
 ﻿using SearchCommandLineApp.Common;
 using SearchCommandLineApp.Models;
+using SearchCommandLineApp.Repositories;
 using SearchCommandLineApp.Services;
 using System;
 using System.Collections.Generic;
@@ -31,39 +32,39 @@ namespace SearchCommandLineApp
                 if (searchCommand == "-search" && dataCommand == "-dataset")
                 {
                     JsonToModelConverterService dataService = new JsonToModelConverterService();
-                    SearchApp app = new SearchApp();
-                    OrganisationSearch organisationSearch = null;
-                    TicketSearch ticketSearch = null;
-                    UserSearch userSearch = null;
+                    SearchResultPrinter printer = new SearchResultPrinter();
+                    PropertyValueSearch searcher = new PropertyValueSearch();
+                    IOrganisationRepository organisationDataset = null;
+                    ITicketRepository ticketDataset = null;
+                    IUserRepository userDataset = null;
 
                     for (var i = fileStartIndex; i < numArgs; i++)
                     {
-                        var dataset = args[i];
-                        
-                        if (string.Equals(dataset, Constants.Datasets.ORGANISATION, StringComparison.OrdinalIgnoreCase))
+                        var datasetSelected = args[i];
+                        List<string> searchResults;
+                        if (string.Equals(datasetSelected, Constants.Datasets.ORGANISATION, StringComparison.OrdinalIgnoreCase))
                         {
-                            organisationSearch = organisationSearch ?? new OrganisationSearch(dataService.GetModelsFromFile<Organisation>("organizations.json"));
-                            app.SetSearchMethod(organisationSearch);
+                            organisationDataset = organisationDataset ?? new OrganisationRepository(dataService.GetModelsFromFile<Organisation>("organizations.json"));
+                            searchResults = searcher.Search(searchTerm, organisationDataset.GetOrganisations()).ToList();
                         }
-                        else if (string.Equals(dataset, Constants.Datasets.TICKETS, StringComparison.OrdinalIgnoreCase))
+                        else if (string.Equals(datasetSelected, Constants.Datasets.TICKETS, StringComparison.OrdinalIgnoreCase))
                         {
-                            ticketSearch = ticketSearch ?? new TicketSearch(dataService.GetModelsFromFile<Ticket>("tickets.json"));
-                            app.SetSearchMethod(ticketSearch);
+                            ticketDataset = ticketDataset ?? new TicketRepository(dataService.GetModelsFromFile<Ticket>("tickets.json"));
+                            searchResults = searcher.Search(searchTerm, ticketDataset.GetTickets()).ToList();
                         }  
-                        else if (string.Equals(dataset, Constants.Datasets.USERS, StringComparison.OrdinalIgnoreCase))
+                        else if (string.Equals(datasetSelected, Constants.Datasets.USERS, StringComparison.OrdinalIgnoreCase))
                         {
-                            userSearch = userSearch ?? new UserSearch(dataService.GetModelsFromFile<User>("users.json"));
-                            app.SetSearchMethod(userSearch);
+                            userDataset = userDataset ?? new UserRepository(dataService.GetModelsFromFile<User>("users.json"));
+                            searchResults = searcher.Search(searchTerm, userDataset.GetUsers()).ToList();
                         }
                         else
                         {
-                            Console.WriteLine($"NO DATASET FOR {dataset} WAS FOUND.");
+                            Console.WriteLine($"NO DATASET FOR {datasetSelected} WAS FOUND.");
                             Console.WriteLine("THE AVAILABLE DATASET OPTIONS ARE THE FOLLOWING:\nOrganisations\nTickets\nUsers");
                             continue;
                         }
                         
-                        app.Search(searchTerm);
-                        app.PrintSearchResults(dataset);
+                        printer.PrintSearchResults(datasetSelected, searchResults);
                     }
                 }
             }
