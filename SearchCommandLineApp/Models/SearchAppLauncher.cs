@@ -14,37 +14,29 @@ namespace SearchCommandLineApp.Models
         private IOrganisationRepository _organisationDataset;
         private ITicketRepository _ticketDataset;
         private IUserRepository _userDataset;
-        private JsonToModelConverterService _dataService;
+        private ISearchable _searcher;
         private SearchResultPrinter _printer;
-        private PropertyValueSearch _searcher;
-
-        public SearchAppLauncher()
+        
+        public SearchAppLauncher(IOrganisationRepository organisationRepository, ITicketRepository ticketRepository, 
+            IUserRepository userRepository, ISearchable searcherMethod)
         {
-            _dataService = new JsonToModelConverterService();
+            _organisationDataset = organisationRepository;
+            _ticketDataset = ticketRepository;
+            _userDataset = userRepository;
+            _searcher = searcherMethod;
             _printer = new SearchResultPrinter();
-            _searcher = new PropertyValueSearch();
         }
 
-        public List<string> DatasetSearcher(string searchTerm, string datasetSelected)
+        public List<string> StartSearch(string searchTerm, string datasetSelected)
         {
-            List<string> searchResults = new List<string>();
             if (string.Equals(datasetSelected, Constants.Datasets.ORGANISATION, StringComparison.OrdinalIgnoreCase))
-            {
-                _organisationDataset = _organisationDataset ?? new OrganisationRepository(_dataService.GetModelsFromFile<Organisation>("organizations.json"));
-                searchResults = _searcher.Search(searchTerm, _organisationDataset.GetOrganisations()).ToList();
-            }
+                return _searcher.Search(searchTerm, _organisationDataset.GetOrganisations()).ToList();
             else if (string.Equals(datasetSelected, Constants.Datasets.TICKETS, StringComparison.OrdinalIgnoreCase))
-            {
-                _ticketDataset = _ticketDataset ?? new TicketRepository(_dataService.GetModelsFromFile<Ticket>("tickets.json"));
-                searchResults = _searcher.Search(searchTerm, _ticketDataset.GetTickets()).ToList();
-            }
+                return _searcher.Search(searchTerm, _ticketDataset.GetTickets()).ToList();
             else if (string.Equals(datasetSelected, Constants.Datasets.USERS, StringComparison.OrdinalIgnoreCase))
-            {
-                _userDataset = _userDataset ?? new UserRepository(_dataService.GetModelsFromFile<User>("users.json"));
-                searchResults = _searcher.Search(searchTerm, _userDataset.GetUsers()).ToList();
-            }
+                return _searcher.Search(searchTerm, _userDataset.GetUsers()).ToList();
 
-            return searchResults;
+            return null;
         }
 
         public void Start(string[] args)
@@ -69,7 +61,7 @@ namespace SearchCommandLineApp.Models
                     for (var i = fileStartIndex; i < numArgs; i++)
                     {
                         var datasetSelected = args[i];
-                        var searchResults = DatasetSearcher(searchTerm, datasetSelected);
+                        var searchResults = StartSearch(searchTerm, datasetSelected);
 
                         if (searchResults.Count == 0)
                         {

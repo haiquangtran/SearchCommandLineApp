@@ -14,7 +14,14 @@ namespace SearchCommandLineApp
     {
         static void Main(string[] args)
         {
-            SearchAppLauncher app = new SearchAppLauncher();
+            var dataService = new JsonToModelConverterService();
+
+            var searchMethod = new PropertyValueSearch();
+            var organisationRepository = new OrganisationRepository(dataService.GetModelsFromFile<Organisation>("organizations.json"));
+            var ticketRepository = new TicketRepository(dataService.GetModelsFromFile<Ticket>("tickets.json"));
+            var userRepository = new UserRepository(dataService.GetModelsFromFile<User>("users.json"));
+
+            SearchAppLauncher app = new SearchAppLauncher(organisationRepository, ticketRepository, userRepository, searchMethod);
             app.Start(args);
             
             Console.Read();

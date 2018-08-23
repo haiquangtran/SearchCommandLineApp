@@ -51,6 +51,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\SearchAppLauncherTests.cs" />
     <Compile Include="Models\PropertyValueSearchTests.cs" />
     <Compile Include="Repositories\TicketRepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryTests.cs" />
