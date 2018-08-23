@@ -11,7 +11,7 @@ namespace SearchCommandLineAppTests.Repositories
     public class OrganisationRepositoryTests
     {
         [TestMethod]
-        public void OrganisationRepository_Constructor_SetsOrganisationsList_ShouldReturnOneOrganisation()
+        public void OrganisationRepository_GetOrganisations_ShouldReturnOneOrganisation()
         {
             var list = new List<Organisation>() {
                 new Organisation()

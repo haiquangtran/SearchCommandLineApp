@@ -11,7 +11,7 @@ namespace SearchCommandLineAppTests.Repositories
     public class UserRepositoryTests
     {
         [TestMethod]
-        public void UserRepository_Constructor_SetsUsersList_ShouldReturnOneUser()
+        public void UserRepository_GetUsers_ShouldReturnOneUser()
         {
             var list = new List<User>() {
                 new User()

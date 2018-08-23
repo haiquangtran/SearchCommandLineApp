@@ -11,7 +11,7 @@ namespace SearchCommandLineAppTests.Repositories
     public class TicketRepositoryTests
     {
         [TestMethod]
-        public void TicketRepository_Constructor_SetsTicketsList_ShouldReturnOneTicket()
+        public void TicketRepository_GetTickets_ShouldReturnOneTicket()
         {
             var list = new List<Ticket>() {
                 new Ticket()
