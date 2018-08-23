@@ -2,7 +2,7 @@
 A simple command line application that does an exact match on field values for .json data and returns the results as JSON objects.
 
 # Usage
-1. Navigate to the directory of the SearchCommandLineApp.exe.
+1. In your terminal, navigate to the directory of the SearchCommandLineApp.exe.
 2. Use this tool by using the following syntax in the terminal: "./SearchCommandLineApp -search "search-term" -dataset <organisations | users | tickets> [organisations | users | tickets] [organisations | users | tickets]"
 
 # Syntax
