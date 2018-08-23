@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SearchCommandLineApp.Services
 {
-    class JsonToModelConverterService : IJsonToModelConverterService
+    public class JsonToModelConverterService : IJsonToModelConverterService
     {
         public IEnumerable<T> GetModelsFromFile<T>(string fileName)
         {
@@ -32,9 +32,10 @@ namespace SearchCommandLineApp.Services
             {
                 Console.WriteLine("Oops! something went wrong! Please make sure you have a valid .json file.");
                 Console.WriteLine(e.StackTrace);
-            }
 
-            return null;
+                // TODO: handle
+                throw e;
+            }
         }
     }
 }
