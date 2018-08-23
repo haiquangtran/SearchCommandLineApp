@@ -16,7 +16,8 @@ namespace SearchCommandLineApp.Models
         private IUserRepository _userDataset;
         private ISearchable _searcher;
         private SearchResultPrinter _printer;
-        
+        private HelpPrinter _helpPrinter;
+
         public SearchAppLauncher(IOrganisationRepository organisationRepository, ITicketRepository ticketRepository, 
             IUserRepository userRepository, ISearchable searcherMethod)
         {
@@ -25,6 +26,7 @@ namespace SearchCommandLineApp.Models
             _userDataset = userRepository;
             _searcher = searcherMethod;
             _printer = new SearchResultPrinter();
+            _helpPrinter = new HelpPrinter();
         }
 
         public List<string> StartSearch(string searchTerm, string datasetSelected)
@@ -47,7 +49,7 @@ namespace SearchCommandLineApp.Models
 
             if (numArgs < minArgs || numArgs > maxArgs)
             {
-                Console.WriteLine("Please enter the correct Syntax");
+                _helpPrinter.PrintHelp();
             }
             else
             {

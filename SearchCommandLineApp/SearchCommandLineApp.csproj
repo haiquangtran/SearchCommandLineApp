@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Constants.cs" />
+    <Compile Include="Models\HelpPrinter.cs" />
     <Compile Include="Models\ISearchable.cs" />
     <Compile Include="Models\PropertyValueSearch.cs" />
     <Compile Include="Models\Organisation.cs" />
