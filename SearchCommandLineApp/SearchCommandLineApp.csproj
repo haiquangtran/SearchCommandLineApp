@@ -49,6 +49,7 @@
     <Compile Include="Models\ISearchable.cs" />
     <Compile Include="Models\PropertyValueSearch.cs" />
     <Compile Include="Models\Organisation.cs" />
+    <Compile Include="Models\SearchAppLauncher.cs" />
     <Compile Include="Models\SearchResultPrinter.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\User.cs" />
