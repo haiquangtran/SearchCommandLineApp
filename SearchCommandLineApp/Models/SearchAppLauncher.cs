@@ -38,7 +38,7 @@ namespace SearchCommandLineApp.Models
             else if (string.Equals(datasetSelected, Constants.Datasets.USERS, StringComparison.OrdinalIgnoreCase))
                 return _searcher.Search(searchTerm, _userDataset.GetUsers()).ToList();
 
-            return new List<string>();
+            return null;
         }
 
         public void Start(string[] args)
@@ -65,10 +65,11 @@ namespace SearchCommandLineApp.Models
                         var datasetSelected = args[i];
                         var searchResults = StartSearch(searchTerm, datasetSelected);
 
-                        if (searchResults.Count == 0)
+                        if (searchResults == null)
                         {
                             Console.WriteLine($"NO DATASET FOR {datasetSelected} WAS FOUND.");
                             Console.WriteLine("THE AVAILABLE DATASET OPTIONS ARE THE FOLLOWING:\nOrganisations\nTickets\nUsers");
+
                             continue;
                         }
 
