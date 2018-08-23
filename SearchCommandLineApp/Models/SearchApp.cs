@@ -35,15 +35,15 @@ namespace SearchCommandLineApp.Models
             _searchResults = _searchMethod.Search(searchTerm).ToList();
         }
 
-        public void PrintSearchResults()
+        public void PrintSearchResults(string datasetName)
         {
             if (_searchResults.Count == 0)
             {
-                Console.WriteLine("FOUND NO SEARCH RESULTS.");
+                Console.WriteLine($"FOUND NO SEARCH RESULTS IN THE DATASET: {datasetName}");
                 return;
             }
                 
-            Console.WriteLine($"FOUND {_searchResults.Count} SEARCH RESULT(S): ");
+            Console.WriteLine($"FOUND {_searchResults.Count} SEARCH RESULT(S) IN THE DATASET {datasetName}:");
             var result = string.Join(",", _searchResults);
             Console.WriteLine(result);
         }

@@ -63,7 +63,7 @@ namespace SearchCommandLineApp
                         }
                         
                         app.Search(searchTerm);
-                        app.PrintSearchResults();
+                        app.PrintSearchResults(dataset);
                     }
                 }
             }
