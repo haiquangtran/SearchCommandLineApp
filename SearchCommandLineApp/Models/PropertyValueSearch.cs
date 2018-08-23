@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SearchCommandLineApp.Models
 {
-    class PropertyValueSearch : ISearchable
+    public class PropertyValueSearch : ISearchable
     {
         public IEnumerable<string> Search(string searchTerm, IEnumerable<Object> propertyCollection)
         {

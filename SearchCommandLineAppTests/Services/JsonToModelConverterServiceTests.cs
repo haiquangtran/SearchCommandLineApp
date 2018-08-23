@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SearchCommandLineAppTests
+namespace SearchCommandLineAppTests.Services
 {
     [TestClass]
-    public class UnitTest1
+    public class JsonToModelConverterServiceTests
     {
         [TestMethod]
         public void TestMethod1()

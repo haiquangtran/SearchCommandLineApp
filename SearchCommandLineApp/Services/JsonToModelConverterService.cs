@@ -16,15 +16,16 @@ namespace SearchCommandLineApp.Services
         {
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\", fileName);
 
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"No file exists at path: {filePath}");
-                Console.WriteLine("Please check you have the correct file path and try again.");
-                return null;
-            }
-
             try
             {
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"No file exists at path: {filePath}");
+                    Console.WriteLine("Please check you have the correct file path and try again.");
+
+                    throw new FileNotFoundException("File does not exist at specified path.");
+                }
+
                 return JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(filePath));
             }
             catch (Exception e)
