@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SearchCommandLineApp.Models
 {
-    class SearchAppLauncher
+    public class SearchAppLauncher
     {
         private IOrganisationRepository _organisationDataset;
         private ITicketRepository _ticketDataset;
@@ -36,7 +36,7 @@ namespace SearchCommandLineApp.Models
             else if (string.Equals(datasetSelected, Constants.Datasets.USERS, StringComparison.OrdinalIgnoreCase))
                 return _searcher.Search(searchTerm, _userDataset.GetUsers()).ToList();
 
-            return null;
+            return new List<string>();
         }
 
         public void Start(string[] args)

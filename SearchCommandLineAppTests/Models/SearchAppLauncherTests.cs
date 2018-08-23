@@ -3,197 +3,93 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Newtonsoft.Json;
+using SearchCommandLineApp.Common;
 using SearchCommandLineApp.Models;
+using SearchCommandLineApp.Repositories;
 
 namespace SearchCommandLineAppTests.Models
 {
     [TestClass]
     public class SearchAppLauncherTests
     {
-        private PropertyValueSearch _propertyValueSearch;
-        private class TestClass
-        {
-            public int TestID { get; set; }
-            public bool TestBool { get; set; }
-            public string TestString { get; set; }
-            public string[] TestArray { get; set; }
-        }
-
-        private TestClass GetTestClassWithAllPopulatedProperties()
-        {
-            return new TestClass()
-            {
-                TestID = 1,
-                TestArray = new string[] { "a", "b" },
-                TestString = "Not Empty",
-                TestBool = false
-            };
-        }
+        private Mock<IOrganisationRepository> _mockOrganisationRepository;
+        private Mock<ITicketRepository> _mockTicketRepository;
+        private Mock<IUserRepository> _mockUserRepository;
+        private Mock<ISearchable> _mockSearchMethod;
 
         [TestInitialize]
         public void SetUp()
         {
-            _propertyValueSearch = new PropertyValueSearch();
-        }
-        
-        [TestMethod]
-        public void PropertyValueSearch_Search_SearchTermTest_NoMatch()
-        {
-            var list = new List<TestClass>()
-            {
-                GetTestClassWithAllPopulatedProperties()
-            };
-
-            var test = _propertyValueSearch.Search("Test", list).ToList();
-
-            Assert.AreEqual(0, test.Count);
+            _mockOrganisationRepository = new Mock<IOrganisationRepository>();
+            _mockTicketRepository = new Mock<ITicketRepository>();
+            _mockUserRepository = new Mock<IUserRepository>();
+            _mockSearchMethod = new Mock<ISearchable>();
         }
 
         [TestMethod]
-        public void PropertyValueSearch_Search_SearchTermNull_ShouldReturnOneObjectContainingNull()
+        public void SearchAppLauncher_StartSearch_ShouldCallSearcherMethod()
         {
-            var containsNull = GetTestClassWithAllPopulatedProperties();
-            containsNull.TestString = null;
+            var app = new SearchAppLauncher(_mockOrganisationRepository.Object, _mockTicketRepository.Object, _mockUserRepository.Object, _mockSearchMethod.Object);
+            var test = app.StartSearch("test", Constants.Datasets.ORGANISATION);
 
-            var list = new List<TestClass>()
-            {
-                containsNull,
-                GetTestClassWithAllPopulatedProperties()
-            };
-            
-            var test = _propertyValueSearch.Search(null, list).ToList();
-
-            Assert.AreEqual(1, test.Count);
-            Assert.AreEqual(JsonConvert.SerializeObject(containsNull, Formatting.Indented), test.First());
-        }
-        
-        [TestMethod]
-        public void PropertyValueSearch_Search_SearchTermNullString_ShouldReturnOneObjectContainingNull()
-        {
-            var containsNull = GetTestClassWithAllPopulatedProperties();
-            containsNull.TestString = null;
-
-            var list = new List<TestClass>()
-            {
-                containsNull,
-                GetTestClassWithAllPopulatedProperties()
-            };
-
-            var test = _propertyValueSearch.Search("null", list).ToList();
-
-            Assert.AreEqual(1, test.Count);
-            Assert.AreEqual(JsonConvert.SerializeObject(containsNull, Formatting.Indented), test.First());
-        }
-        
-        [TestMethod]
-        public void PropertyValueSearch_Search_SearchTermEmptyString_ShouldReturnOneObjectContainingEmptyField()
-        {
-            var containsNull = GetTestClassWithAllPopulatedProperties();
-            containsNull.TestString = "";
-
-            var list = new List<TestClass>()
-            {
-                containsNull,
-                GetTestClassWithAllPopulatedProperties()
-            };
-
-            var test = _propertyValueSearch.Search("", list).ToList();
-
-            Assert.AreEqual(1, test.Count);
-            Assert.AreEqual(JsonConvert.SerializeObject(containsNull, Formatting.Indented), test.First());
+            _mockSearchMethod.Verify(m => m.Search(It.IsAny<string>(), It.IsAny<IEnumerable<Object>>()), Times.Once);
         }
 
         [TestMethod]
-        public void PropertyValueSearch_Search_SearchTermInt_ShouldHaveOneMatch()
+        public void SearchAppLauncher_Start_InvalidNumberOfArguments_LessThanMinArguments_ShouldNotCalLSearch()
         {
-            var expectedMatch = GetTestClassWithAllPopulatedProperties();
-            expectedMatch.TestID = 100;
-            var list = new List<TestClass>()
-            {
-                expectedMatch,
-                GetTestClassWithAllPopulatedProperties()
-            };
+            var test = new SearchAppLauncher(_mockOrganisationRepository.Object, _mockTicketRepository.Object, _mockUserRepository.Object, _mockSearchMethod.Object);
+            var args = new string[] { "-search", "nothing", "none" };
 
-            var test = _propertyValueSearch.Search("100", list).ToList();
+            test.Start(args);
 
-            Assert.AreEqual(1, test.Count);
-            Assert.AreEqual(JsonConvert.SerializeObject(expectedMatch, Formatting.Indented), test.First());
+            _mockSearchMethod.Verify(m => m.Search(It.IsAny<string>(), It.IsAny<IEnumerable<Object>>()), Times.Never);
         }
 
         [TestMethod]
-        public void PropertyValueSearch_Search_SearchTermBool_ShouldHaveOneMatch()
+        public void SearchAppLauncher_Start_InvalidNumberOfArguments_MoreThanMaxArguments_ShouldNotCalLSearch()
         {
-            var expectedMatch = GetTestClassWithAllPopulatedProperties();
-            expectedMatch.TestBool = true;
-            var list = new List<TestClass>()
-            {
-                expectedMatch,
-                GetTestClassWithAllPopulatedProperties()
-            };
+            var test = new SearchAppLauncher(_mockOrganisationRepository.Object, _mockTicketRepository.Object, _mockUserRepository.Object, _mockSearchMethod.Object);
+            var args = new string[] { "-search", "nothing", "none", "test", "test2", "test3", "test4" };
 
-            var test = _propertyValueSearch.Search("true", list).ToList();
+            test.Start(args);
 
-            Assert.AreEqual(1, test.Count);
-            Assert.AreEqual(JsonConvert.SerializeObject(expectedMatch, Formatting.Indented), test.First());
+            _mockSearchMethod.Verify(m => m.Search(It.IsAny<string>(), It.IsAny<IEnumerable<Object>>()), Times.Never);
         }
 
         [TestMethod]
-        public void PropertyValueSearch_Search_SearchTermString_ShouldHaveOneMatch()
+        public void SearchAppLauncher_Start_ValidNumberOfArguments_WrongSyntax_NoDatasetArgument_ShouldNotCalLSearch()
         {
-            const string expectedMatchString = "result";
-            var expectedMatch = GetTestClassWithAllPopulatedProperties();
-            expectedMatch.TestString = expectedMatchString;
-            var list = new List<TestClass>()
-            {
-                expectedMatch,
-                GetTestClassWithAllPopulatedProperties()
-            };
+            var test = new SearchAppLauncher(_mockOrganisationRepository.Object, _mockTicketRepository.Object, _mockUserRepository.Object, _mockSearchMethod.Object);
+            var args = new string[] { "-search", "nothing", "none", "test", "test2" };
 
-            var test = _propertyValueSearch.Search(expectedMatchString, list).ToList();
+            test.Start(args);
 
-            Assert.AreEqual(1, test.Count);
-            Assert.AreEqual(JsonConvert.SerializeObject(expectedMatch, Formatting.Indented), test.First());
+            _mockSearchMethod.Verify(m => m.Search(It.IsAny<string>(), It.IsAny<IEnumerable<Object>>()), Times.Never);
         }
 
         [TestMethod]
-        public void PropertyValueSearch_Search_SearchTermIsInTheList_ShouldHaveOneMatch()
+        public void SearchAppLauncher_Start_ValidNumberOfArguments_WrongSyntax_NoSearchArgument_ShouldNotCalLSearch()
         {
-            const string expectedMatchString = "Matched";
-            var expectedMatch = GetTestClassWithAllPopulatedProperties();
-            expectedMatch.TestArray = new string[] { expectedMatchString };
-            var list = new List<TestClass>()
-            {
-                expectedMatch,
-                GetTestClassWithAllPopulatedProperties()
-            };
+            var test = new SearchAppLauncher(_mockOrganisationRepository.Object, _mockTicketRepository.Object, _mockUserRepository.Object, _mockSearchMethod.Object);
+            var args = new string[] { "test", "nothing", "-dataset", "test", "test2" };
 
-            var test = _propertyValueSearch.Search(expectedMatchString, list).ToList();
+            test.Start(args);
 
-            Assert.AreEqual(1, test.Count);
-            Assert.AreEqual(JsonConvert.SerializeObject(expectedMatch, Formatting.Indented), test.First());
+            _mockSearchMethod.Verify(m => m.Search(It.IsAny<string>(), It.IsAny<IEnumerable<Object>>()), Times.Never);
         }
 
         [TestMethod]
-        public void PropertyValueSearch_Search_SearchTermIsInTheList_ShouldHaveTwoMatches()
+        public void SearchAppLauncher_Start_ValidNumberOfArguments_CorrectSyntax_ShouldCallSearch()
         {
-            const string expectedMatchString = "Two matches";
-            var expectedMatchOne = GetTestClassWithAllPopulatedProperties();
-            expectedMatchOne.TestArray = new string[] { expectedMatchString };
-            var expectedMatchTwo = GetTestClassWithAllPopulatedProperties();
-            expectedMatchTwo.TestString = expectedMatchString;
-            var list = new List<TestClass>()
-            {
-                expectedMatchOne,
-                GetTestClassWithAllPopulatedProperties(),
-                expectedMatchTwo
-            };
+            var test = new SearchAppLauncher(_mockOrganisationRepository.Object, _mockTicketRepository.Object, _mockUserRepository.Object, _mockSearchMethod.Object);
+            var args = new string[] { "-search", "test", "-dataset", "organisations"};
 
-            var test = _propertyValueSearch.Search(expectedMatchString, list).ToList();
+            test.Start(args);
 
-            Assert.AreEqual(2, test.Count);
-            Assert.AreEqual(JsonConvert.SerializeObject(expectedMatchOne, Formatting.Indented), test[0]);
-            Assert.AreEqual(JsonConvert.SerializeObject(expectedMatchTwo, Formatting.Indented), test[1]);
+            _mockSearchMethod.Verify(m => m.Search(It.IsAny<string>(), It.IsAny<IEnumerable<Object>>()), Times.Once);
         }
     }
 }
