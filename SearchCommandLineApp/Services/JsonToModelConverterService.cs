@@ -19,11 +19,21 @@ namespace SearchCommandLineApp.Services
             if (!File.Exists(filePath))
             {
                 Console.WriteLine($"No file exists at path: {filePath}");
-                Console.WriteLine("Please try again.");
+                Console.WriteLine("Please check you have the correct file path and try again.");
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(filePath));
+            try
+            {
+                return JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(filePath));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Oops! something went wrong! Please make sure you have a valid .json file.");
+                Console.WriteLine(e.StackTrace);
+            }
+
+            return null;
         }
     }
 }
