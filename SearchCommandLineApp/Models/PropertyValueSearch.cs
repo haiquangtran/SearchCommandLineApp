@@ -21,6 +21,10 @@ namespace SearchCommandLineApp.Models
                 var hasSearchTerm = properties.Any(p =>
                 {
                     var propertyValue = p.GetValue(property, null);
+
+                    if (propertyValue is null && String.Equals(searchTerm, "null", StringComparison.OrdinalIgnoreCase))
+                        return true;
+
                     var propertyList = propertyValue as IEnumerable;
                     if (propertyList != null && !(propertyList is string))
                     {
@@ -31,7 +35,7 @@ namespace SearchCommandLineApp.Models
                         }
                     }
 
-                    return String.Equals(propertyValue?.ToString() ?? string.Empty, searchTerm, StringComparison.OrdinalIgnoreCase);
+                    return String.Equals(propertyValue?.ToString(), searchTerm, StringComparison.OrdinalIgnoreCase);
                 });
 
                 if (hasSearchTerm)
