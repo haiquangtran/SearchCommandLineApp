@@ -8,16 +8,16 @@ using SearchCommandLineApp.Repositories;
 namespace SearchCommandLineAppTests.Repositories
 {
     [TestClass]
-    public class OrganisationRepositoryTests
+    public class TicketRepositoryTests
     {
         [TestMethod]
-        public void OrganisationRepository_Constructor_SetsOrganisationsList_ShouldReturnOneOrganisation()
+        public void TicketRepository_Constructor_SetsTicketsList_ShouldReturnOneTicket()
         {
-            var list = new List<Organisation>() {
-                new Organisation()
+            var list = new List<Ticket>() {
+                new Ticket()
             };
-            var organisationRepository = new OrganisationRepository(list);
-            var test = organisationRepository.GetOrganisations().ToList();
+            var ticketRepository = new TicketRepository(list);
+            var test = ticketRepository.GetTickets().ToList();
 
             Assert.IsNotNull(test);
             Assert.AreEqual(1, test.Count);

@@ -53,6 +53,8 @@
   <ItemGroup>
     <Compile Include="ProgramTests.cs" />
     <Compile Include="Models\PropertyValueSearchTests.cs" />
+    <Compile Include="Repositories\TicketRepositoryTests.cs" />
+    <Compile Include="Repositories\UserRepositoryTests.cs" />
     <Compile Include="Repositories\OrganisationRepositoryTests.cs" />
     <Compile Include="Services\JsonToModelConverterServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
